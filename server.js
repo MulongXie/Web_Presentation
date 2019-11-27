@@ -1,3 +1,4 @@
+var child_process = require('child_process');
 var express	=	require("express");
 var app	= express();
 
@@ -9,7 +10,7 @@ var storage	=	multer.diskStorage({
         callback(null, uploadPath);
     },
     filename: function (req, file, callback) {
-        uploadPath = file.fieldname + '-' + Date.now();
+        uploadPath = '1.png';
         callback(null, uploadPath);
     }
 });
@@ -18,6 +19,7 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 app.use(express.static("public"));
 app.use(express.static("uploads"));
+app.use(express.static("processed"));
 
 
 app.get('/',function(req,res){
@@ -31,6 +33,24 @@ app.post('/upload',function(req,res){
         }else {
             res.json({code:1, imgPath:uploadPath});
         }
+    });
+});
+
+app.get('/process', function (req, res) {
+    var workerProcess = child_process.exec('python processing.py', function (error, stdout, stderr) {
+        if (error) {
+            console.log(error.stack);
+            console.log('Error code: '+error.code);
+            console.log('Signal received: '+error.signal);
+            res.json({code:0});
+        }else{
+            console.log('stdout: ' + stdout);
+            res.json({code:1});
+        }
+    });
+
+    workerProcess.on('exit', function () {
+        console.log('Program Invoked')
     });
 });
 

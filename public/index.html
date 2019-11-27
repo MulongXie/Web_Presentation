@@ -3,6 +3,7 @@
     <title>File upload Node.</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
 <div class="upload">
@@ -12,17 +13,20 @@
     </form>
 </div>
 
-<div id="process" style="display: none">
-    <button id="btnProcess" onclick="process()"></button>
+<div id="process" style="display: block">
+    <button id="btnProcess" onclick="process()">Process</button>
     <h2 id="textProcess"></h2>
 </div>
 
 <div class="showOrg" style="width: 48%">
-    <h2 id="textShow">Upload your image</h2>
-    <img id="imgShow" style="width: 100%">
+    <h2 id="textShowOrg">Upload your image</h2>
+    <img id="imgShowOrg" style="width: 100%">
 </div>
 
-
+<div class="showProcessed" style="width: 48%; display: none;">
+    <h2 id="textShowPro">Upload your image</h2>
+    <img id="imgShowPro" style="width: 100%">
+</div>
 
 </body>
 <script>
@@ -31,10 +35,12 @@
             $(this).ajaxSubmit({
                 success: function(response) {
                     if(response.code == 1){
-                        $('#imgShow').attr('src', response.imgPath);
-                        $('#textShow').html('Upload successfully');
+                        console.log(response.imgPath);
+                        $('#imgShowOrg').attr('src', response.imgPath);
+                        $('#textShowOrg').html('Upload successfully');
+                        $('#process').show();
                     }else {
-                        $('#textShow').html('Upload failed');
+                        $('#textShowOrg').html('Upload failed');
                     }
                 }
             });
@@ -43,7 +49,20 @@
     });
 
     function process() {
-        $("#textProcess").html('Processing')
+        $.ajax({
+            url: '/process',
+            type: 'get',
+            success: function (res) {
+                console.log(res.code);
+                if(res.code == 1){
+                    $('.showProcessed').show();
+                    $('#imgShowPro').attr('src', './a.png');
+                    $('#textShowPro').html('Processing successfully');
+                }else {
+                    $('#textShowOrg').html('Processing failed');
+                }
+            }
+        })
     }
 </script>
 </html>
