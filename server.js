@@ -1,29 +1,39 @@
-var express = require('express');
-var formidable = require("formidable");
-var fs = require('fs');
-var upload = require('multer')({dest:'uploads/'});
+var express	=	require("express");
+var app	= express();
 
-var app = express();
+var uploadPath = './uploads';
 
-app.use('/public', express.static('public'));
-app.use('/uploads', express.static('uploads'));
+var multer	=	require('multer');
+var storage	=	multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, uploadPath);
+    },
+    filename: function (req, file, callback) {
+        uploadPath = file.fieldname + '-' + Date.now();
+        callback(null, uploadPath);
+    }
+});
+var upload = multer({ storage : storage}).single('userPhoto');
 
-app.get('/', function(req, res){
-    res.sendfile('public/index.html')
+
+app.use(express.static("public"));
+app.use(express.static("uploads"));
+
+
+app.get('/',function(req,res){
+    res.sendfile("public/test2.html");
 });
 
-app.post('/upload', upload.single('uploadImg'), function (req, res) {
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(error, fields, files) {
-        console.log(files.upload.path);
-        fs.writeFileSync("public/test.png", fs.readFileSync(files.upload.path));
-        res.redirect("public/upload.html") ;
+app.post('/upload',function(req,res){
+    upload(req,res,function(err) {
+        if(err) {
+            res.json({code: 0});
+        }else {
+            res.json({code:1, imgPath:uploadPath});
+        }
     });
 });
 
-var server = app.listen(8000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
-
-    console.log('Example app listening at http://%s:%s', host, port);
+app.listen(8000,function(){
+    console.log("Working on port 8000");
 });
