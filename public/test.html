@@ -1,11 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>test</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
+
 <body>
-    <form></form>
+<form enctype="multipart/form-data" name="file" id="file" method="post">
+    <input type="file" name="upload">
+    <input type="submit" value="Upload file" onclick="uploading()">
+</form>
+
+<div class="show">
+    <h2 id="textShow">Upload your image</h2>
+    <img id="imgShow">
+</div>
+
+<script type="application/javascript">
+    function uploading() {
+        var formData = new FormData($('#file')[0]);
+        console.log('Uploading file');
+        console.log(formData);
+
+        $.ajax({
+            url:'/upload',
+            type:'POST',
+            data:formData,
+            processData: false,
+            contentType: false,
+            success: function (data, status, xhr){
+                if(data.code == 1){
+                    $('#imgShow').attr('src', data.message.url);
+                    $('#resultText').html('Upload successfully');
+                }else {
+                    $('#resultText').html('Upload failed');
+                }
+            }
+        })
+    }
+
+</script>
 
 </body>
 </html>
