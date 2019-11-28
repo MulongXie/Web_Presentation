@@ -2,7 +2,7 @@ var child_process = require('child_process');
 var express	=	require("express");
 var app	= express();
 
-var uploadPath = './uploads';
+var uploadPath = './inputs';
 var index = 0;
 
 var multer	=	require('multer');
@@ -18,8 +18,8 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 
 app.use(express.static("public"));
-app.use(express.static("uploads"));
-app.use(express.static("processed"));
+app.use(express.static("inputs"));
+app.use(express.static("outputs"));
 app.use(express.static("processing"));
 
 
@@ -53,7 +53,7 @@ app.get('/process', function (req, res) {
 
     workerProcess.on('exit', function () {
         console.log('Program Invoked');
-        res.json({code:1, imgPath:'pro' + (index-1).toString() + '.png'});
+        res.json({code:1, imgPath:'result' + (index-1).toString() + '.png'});
     });
 });
 

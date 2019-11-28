@@ -12,8 +12,8 @@ import ip_preprocessing as pre
 start = time.clock()
 index = sys.argv[1]
 
-input_path = 'uploads/' + str(index) + '.png'
-output_path = 'processed/pro' + str(index) + '.png'
+input_path = 'inputs/' + str(index) + '.png'
+output_path = 'outputs/result' + str(index) + '.png'
 
 print("*** Processing starts ***")
 img = cv2.imread(input_path, 0)
