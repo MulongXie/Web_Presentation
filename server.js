@@ -3,6 +3,7 @@ var express	=	require("express");
 var app	= express();
 
 var uploadPath = './uploads';
+var index = 0;
 
 var multer	=	require('multer');
 var storage	=	multer.diskStorage({
@@ -10,8 +11,7 @@ var storage	=	multer.diskStorage({
         callback(null, uploadPath);
     },
     filename: function (req, file, callback) {
-        uploadPath = '1.png';
-        callback(null, uploadPath);
+        callback(null, index.toString() + '.png');
     }
 });
 var upload = multer({ storage : storage}).single('userPhoto');
@@ -29,15 +29,17 @@ app.get('/',function(req,res){
 app.post('/upload',function(req,res){
     upload(req,res,function(err) {
         if(err) {
+            console.log(err);
             res.json({code: 0});
         }else {
-            res.json({code:1, imgPath:uploadPath});
+            res.json({code:1, imgPath:index.toString() + '.png'});
+            index += 1;
         }
     });
 });
 
 app.get('/process', function (req, res) {
-    var workerProcess = child_process.exec('python processing.py', function (error, stdout, stderr) {
+    var workerProcess = child_process.exec('python processing.py ' + (index-1), function (error, stdout, stderr) {
         if (error) {
             console.log(error.stack);
             console.log('Error code: '+error.code);
@@ -45,12 +47,12 @@ app.get('/process', function (req, res) {
             res.json({code:0});
         }else{
             console.log('stdout: ' + stdout);
-            res.json({code:1});
         }
     });
 
     workerProcess.on('exit', function () {
-        console.log('Program Invoked')
+        console.log('Program Invoked');
+        res.json({code:1, imgPath:'pro' + (index-1).toString() + '.png'});
     });
 });
 

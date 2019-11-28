@@ -35,7 +35,7 @@
             $(this).ajaxSubmit({
                 success: function(response) {
                     if(response.code == 1){
-                        console.log(response.imgPath);
+                        console.log('Org image: ' + response.imgPath);
                         $('#imgShowOrg').attr('src', response.imgPath);
                         $('#textShowOrg').html('Upload successfully');
                         $('#process').show();
@@ -53,10 +53,10 @@
             url: '/process',
             type: 'get',
             success: function (res) {
-                console.log(res.code);
                 if(res.code == 1){
+                    console.log('Processed img: ' + res.imgPath);
                     $('.showProcessed').show();
-                    $('#imgShowPro').attr('src', './a.png');
+                    $('#imgShowPro').attr('src', './' + res.imgPath);
                     $('#textShowPro').html('Processing successfully');
                 }else {
                     $('#textShowOrg').html('Processing failed');
