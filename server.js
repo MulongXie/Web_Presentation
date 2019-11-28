@@ -20,6 +20,7 @@ var upload = multer({ storage : storage}).single('userPhoto');
 app.use(express.static("public"));
 app.use(express.static("uploads"));
 app.use(express.static("processed"));
+app.use(express.static("processing"));
 
 
 app.get('/',function(req,res){
