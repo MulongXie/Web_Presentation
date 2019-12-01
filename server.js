@@ -1,5 +1,5 @@
 var child_process = require('child_process');
-var express	=	require("express");
+var express	= require("express");
 var app	= express();
 
 var uploadPath = './inputs';
@@ -24,7 +24,7 @@ app.use(express.static("processing"));
 
 
 app.get('/',function(req,res){
-    res.sendfile("public/test2.html");
+    res.sendfile("public/index.html");
 });
 
 app.post('/upload',function(req,res){
