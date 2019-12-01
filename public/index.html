@@ -49,6 +49,8 @@
     });
 
     function process() {
+        $('.showProcessed').show();
+        $('#textShowPro').html('Processing');
         $.ajax({
             url: '/process',
             type: 'get',
