@@ -2,7 +2,7 @@ var child_process = require('child_process');
 var express	= require("express");
 var app	= express();
 
-var uploadPath = './inputs';
+var uploadPath = './data/inputs';
 var index = 0;
 
 var multer	=	require('multer');
@@ -18,8 +18,8 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 
 app.use(express.static("public"));
-app.use(express.static("inputs"));
-app.use(express.static("outputs"));
+app.use(express.static("data/inputs"));
+app.use(express.static("data/outputs"));
 app.use(express.static("processing"));
 
 
@@ -40,7 +40,7 @@ app.post('/upload',function(req,res){
 });
 
 app.get('/process', function (req, res) {
-    var workerProcess = child_process.exec('python processing.py ' + (index-1), function (error, stdout, stderr) {
+    var workerProcess = child_process.exec('python xianyu.py ' + (index-1), function (error, stdout, stderr) {
         if (error) {
             console.log(error.stack);
             console.log('Error code: '+error.code);
